@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JobGuard AI — Fake Job Detector & Job Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ── Navigation ─────────────────────────────────────── -->
+  <nav class="navbar">
+    <div class="nav-inner">
+      <div class="nav-brand" onclick="showTab('home')">
+        <div class="brand-icon">🛡️</div>
+        <span class="brand-name">JobGuard <span class="brand-ai">AI</span></span>
+      </div>
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="home" onclick="showTab('home')">Home</button>
+        <button class="nav-tab" data-tab="search" onclick="showTab('search')">Find Jobs</button>
+        <button class="nav-tab" data-tab="detect" onclick="showTab('detect')">
+          <span class="tab-badge">AI</span> Detect Scam
+        </button>
+        <button class="nav-tab" data-tab="post" onclick="showTab('post')">Post Job</button>
+        <button class="nav-tab" data-tab="saved" onclick="showTab('saved')">Saved</button>
+      </div>
+      <div class="nav-status" id="serverStatus">
+        <span class="status-dot"></span>
+        <span class="status-text">Connecting...</span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ── Main Content ───────────────────────────────────── -->
+  <main class="main-content">
+
+    <!-- ════════════════ HOME TAB ════════════════ -->
+    <section id="tab-home" class="tab-section active">
+
+      <!-- Hero -->
+      <div class="hero">
+        <div class="hero-bg-grid"></div>
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span>🤖</span>
+          </div>
+          <h1 class="hero-title">
+            Find Real Jobs.<br/>
+            <span class="hero-accent">Detect Fake Ones.</span>
+          </h1>
+          <p class="hero-subtitle">
+            AI-powered platform that helps you search legitimate job listings
+            and instantly detect fake or scam job postings.
+          </p>
+          <div class="hero-search-bar">
+            <input type="text" id="heroSearchInput" placeholder="Search jobs — React Developer, Data Scientist, Designer..." />
+            <button onclick="heroSearch()" class="btn-primary">Search Jobs</button>
+          </div>
+          <div class="hero-tags">
+            <span onclick="quickSearch('React Developer')">React Developer</span>
+            <span onclick="quickSearch('Data Scientist')">Data Scientist</span>
+            <span onclick="quickSearch('UI/UX Designer')">UI/UX Designer</span>
+            <span onclick="quickSearch('Remote')">Remote Jobs</span>
+            <span onclick="quickSearch('Marketing')">Marketing</span>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card floating">
+            <div class="hc-top">
+              <div class="hc-company-icon">T</div>
+              <div>
+                <div class="hc-title">Senior React Developer</div>
+                <div class="hc-company">TechNova Solutions</div>
+              </div>
+              <div class="hc-badge safe">✓ Verified</div>
+            </div>
+            <div class="hc-tags">
+              <span>Full-time</span><span>Remote</span><span>₹18-28 LPA</span>
+            </div>
+            <div class="hc-risk">
+              <span>Risk Score:</span>
+              <div class="mini-risk-bar"><div class="mini-risk-fill" style="width:5%;background:#22c55e"></div></div>
+              <span class="risk-num safe">5/100</span>
+            </div>
+          </div>
+          <div class="hero-card floating-delayed warning-card">
+            <div class="hc-top">
+              <div class="hc-company-icon warn">!</div>
+              <div>
+                <div class="hc-title">Work From Home $$$</div>
+                <div class="hc-company">GlobalEarn Network</div>
+              </div>
+              <div class="hc-badge fake">⚠ FAKE</div>
+            </div>
+            <div class="hc-tags">
+              <span class="warn-tag">Upfront Fee</span><span class="warn-tag">No Experience??</span>
+            </div>
+            <div class="hc-risk">
+              <span>Risk Score:</span>
+              <div class="mini-risk-bar"><div class="mini-risk-fill" style="width:95%;background:#ef4444"></div></div>
+              <span class="risk-num fake">95/100</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-num" id="statTotal">—</div>
+          <div class="stat-label">Jobs Listed</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num" id="statVerified">—</div>
+          <div class="stat-label">Verified Jobs</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num" id="statFake">—</div>
+          <div class="stat-label">Fake Jobs Caught</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-num" id="statRemote">—</div>
+          <div class="stat-label">Remote Jobs</div>
+        </div>
+      </div>
+
+      <!-- Features -->
+      <div class="features-section">
+        <h2 class="section-title">How JobGuard AI Works</h2>
+        <div class="features-grid">
+          <div class="feature-card" onclick="showTab('search')">
+            <div class="feature-icon">🔍</div>
+            <h3>Smart Job Search</h3>
+            <p>Search thousands of listings with filters for location, type, salary, and category. All results ranked by legitimacy.</p>
+            <span class="feature-link">Search Jobs →</span>
+          </div>
+          <div class="feature-card highlight" onclick="showTab('detect')">
+            <div class="feature-icon">🤖</div>
+            <h3>AI Scam Detection</h3>
+            <p>Paste any job description and our AI analyzes it for 10+ fraud indicators, giving you a risk score with detailed reasoning.</p>
+            <span class="feature-link">Try Now →</span>
+          </div>
+          <div class="feature-card" onclick="showTab('post')">
+            <div class="feature-icon">📋</div>
+            <h3>Post Legitimate Jobs</h3>
+            <p>Employers can post jobs with full details. Every listing is subject to our community safety guidelines.</p>
+            <span class="feature-link">Post a Job →</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Jobs Preview -->
+      <div class="recent-section">
+        <div class="section-header">
+          <h2 class="section-title">Recent Job Listings</h2>
+          <button class="btn-outline" onclick="showTab('search')">View All Jobs</button>
+        </div>
+        <div id="homeJobsList" class="jobs-grid">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ════════════════ SEARCH TAB ════════════════ -->
+    <section id="tab-search" class="tab-section">
+      <div class="page-header">
+        <h2>Find Jobs</h2>
+        <p>Search verified job listings from across India and worldwide</p>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="searchInput" placeholder="Job title, skills, company..." 
+                 oninput="fetchSuggestions(this.value)" onkeyup="handleSearchKey(event)" />
+          <input type="text" id="locationInput" placeholder="City or Remote" 
+                 onkeyup="handleSearchKey(event)" />
+          <button class="btn-primary" onclick="performSearch()">Search</button>
+        </div>
+        <div id="suggestions" class="suggestions-dropdown hidden"></div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-bar">
+        <select id="filterType" onchange="performSearch()">
+          <option value="">All Types</option>
+          <option value="full-time">Full-time</option>
+          <option value="part-time">Part-time</option>
+          <option value="contract">Contract</option>
+          <option value="internship">Internship</option>
+        </select>
+        <select id="filterCategory" onchange="performSearch()">
+          <option value="all">All Categories</option>
+          <option value="Technology">Technology</option>
+          <option value="Marketing">Marketing</option>
+          <option value="Data Science">Data Science</option>
+          <option value="Design">Design</option>
+          <option value="Finance">Finance</option>
+          <option value="General">General</option>
+        </select>
+        <select id="filterSort" onchange="performSearch()">
+          <option value="recent">Most Recent</option>
+          <option value="popular">Most Popular</option>
+          <option value="safest">Safest First</option>
+        </select>
+        <label class="toggle-label">
+          <input type="checkbox" id="filterRemote" onchange="performSearch()" />
+          <span>Remote Only</span>
+        </label>
+        <label class="toggle-label">
+          <input type="checkbox" id="filterSafe" onchange="performSearch()" />
+          <span>Safe Jobs Only</span>
+        </label>
+        <button class="btn-ghost" onclick="clearFilters()">Clear Filters</button>
+      </div>
+
+      <div id="searchResultsInfo" class="results-info"></div>
+      <div id="searchResults" class="jobs-grid">
+        <div class="loading-spinner"></div>
+      </div>
+    </section>
+
+    <!-- ════════════════ DETECT TAB ════════════════ -->
+    <section id="tab-detect" class="tab-section">
+      <div class="page-header">
+        <h2>🤖 AI Fake Job Detector</h2>
+        <p>Paste any job listing and our AI will analyze it for fraud indicators in seconds</p>
+      </div>
+
+      <div class="detect-layout">
+
+        <!-- Input Form -->
+        <div class="detect-form-panel">
+          <div class="detect-mode-tabs">
+            <button class="mode-tab active" onclick="switchDetectMode('detailed')">Detailed Analysis</button>
+            <button class="mode-tab" onclick="switchDetectMode('quick')">Quick Paste</button>
+          </div>
+
+          <!-- Detailed Mode -->
+          <div id="detectDetailed" class="detect-mode">
+            <div class="form-group">
+              <label>Job Title *</label>
+              <input type="text" id="dTitle" placeholder="e.g. Senior Software Engineer" />
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Company Name</label>
+                <input type="text" id="dCompany" placeholder="e.g. Acme Corp" />
+              </div>
+              <div class="form-group">
+                <label>Location</label>
+                <input type="text" id="dLocation" placeholder="e.g. Bangalore / Remote" />
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Salary Offered</label>
+                <input type="text" id="dSalary" placeholder="e.g. ₹15-20 LPA or $500/week" />
+              </div>
+              <div class="form-group">
+                <label>Contact Email</label>
+                <input type="text" id="dEmail" placeholder="e.g. hr@company.com" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Company Website</label>
+              <input type="text" id="dWebsite" placeholder="e.g. https://company.com" />
+            </div>
+            <div class="form-group">
+              <label>Job Description *</label>
+              <textarea id="dDescription" rows="6" placeholder="Paste the full job description here..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Requirements (one per line)</label>
+              <textarea id="dRequirements" rows="4" placeholder="5+ years experience&#10;Python proficiency&#10;Team player..."></textarea>
+            </div>
+            <button class="btn-detect" onclick="analyzeJob()" id="detectBtn">
+              <span class="btn-icon">🤖</span> Analyze with AI
+            </button>
+          </div>
+
+          <!-- Quick Mode -->
+          <div id="detectQuick" class="detect-mode hidden">
+            <div class="form-group">
+              <label>Paste Full Job Listing</label>
+              <textarea id="dQuickText" rows="14" placeholder="Paste the entire job listing text here — title, description, requirements, salary, contact info — everything. Our AI will parse and analyze it automatically..."></textarea>
+            </div>
+            <button class="btn-detect" onclick="analyzeQuick()" id="detectBtnQuick">
+              <span class="btn-icon">⚡</span> Quick Analyze
+            </button>
+          </div>
+
+          <!-- Sample Jobs -->
+          <div class="sample-jobs">
+            <p class="sample-label">Try a sample:</p>
+            <div class="sample-btns">
+              <button class="btn-ghost-sm" onclick="loadSampleJob('real')">✅ Real Job Sample</button>
+              <button class="btn-ghost-sm warn-btn" onclick="loadSampleJob('fake')">⚠️ Fake Job Sample</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Panel -->
+        <div class="detect-result-panel" id="detectResultPanel">
+          <div class="detect-placeholder">
+            <div class="placeholder-icon">🛡️</div>
+            <h3>AI Analysis Results</h3>
+            <p>Fill in the job details and click <strong>Analyze with AI</strong> to get a full fraud risk assessment.</p>
+            <ul class="placeholder-features">
+              <li>✓ Risk Score (0-100)</li>
+              <li>✓ SAFE / SUSPICIOUS / FAKE verdict</li>
+              <li>✓ Detailed red flags list</li>
+              <li>✓ Positive trust signals</li>
+              <li>✓ AI recommendation</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ════════════════ POST JOB TAB ════════════════ -->
+    <section id="tab-post" class="tab-section">
+      <div class="page-header">
+        <h2>Post a Job</h2>
+        <p>Add a legitimate job listing to help job seekers find real opportunities</p>
+      </div>
+
+      <div class="post-form-container">
+        <div id="postSuccessMsg" class="success-banner hidden">
+          ✅ Job posted successfully! It will appear in listings shortly.
+        </div>
+
+        <div class="form-card">
+          <h3 class="form-section-title">📋 Job Details</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Job Title *</label>
+              <input type="text" id="pTitle" placeholder="e.g. Frontend Developer" />
+            </div>
+            <div class="form-group">
+              <label>Company Name *</label>
+              <input type="text" id="pCompany" placeholder="e.g. TechCorp India" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Location</label>
+              <input type="text" id="pLocation" placeholder="e.g. Mumbai / Remote" />
+            </div>
+            <div class="form-group">
+              <label>Job Type</label>
+              <select id="pType">
+                <option>Full-time</option>
+                <option>Part-time</option>
+                <option>Contract</option>
+                <option>Internship</option>
+                <option>Freelance</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Salary / Compensation</label>
+              <input type="text" id="pSalary" placeholder="e.g. ₹10-15 LPA or Negotiable" />
+            </div>
+            <div class="form-group">
+              <label>Category</label>
+              <select id="pCategory">
+                <option>Technology</option>
+                <option>Marketing</option>
+                <option>Data Science</option>
+                <option>Design</option>
+                <option>Finance</option>
+                <option>Operations</option>
+                <option>Sales</option>
+                <option>HR</option>
+                <option>General</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Job Description *</label>
+            <textarea id="pDescription" rows="6" placeholder="Describe the role, responsibilities, and what a typical day looks like..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Requirements (one per line)</label>
+              <textarea id="pRequirements" rows="5" placeholder="3+ years of experience&#10;Strong communication skills&#10;Proficiency in Python..."></textarea>
+            </div>
+            <div class="form-group">
+              <label>Benefits (one per line)</label>
+              <textarea id="pBenefits" rows="5" placeholder="Health insurance&#10;Remote work&#10;Annual bonus..."></textarea>
+            </div>
+          </div>
+
+          <h3 class="form-section-title">🏢 Company Info</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Contact Email</label>
+              <input type="email" id="pEmail" placeholder="hr@yourcompany.com" />
+            </div>
+            <div class="form-group">
+              <label>Company Website</label>
+              <input type="url" id="pWebsite" placeholder="https://yourcompany.com" />
+            </div>
+          </div>
+
+          <label class="toggle-label full-toggle">
+            <input type="checkbox" id="pRemote" />
+            <span>This is a remote-friendly position</span>
+          </label>
+
+          <div class="form-actions">
+            <button class="btn-outline" onclick="clearPostForm()">Clear Form</button>
+            <button class="btn-primary large" onclick="postJob()" id="postJobBtn">
+              📤 Post Job Listing
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════════════════ SAVED TAB ════════════════ -->
+    <section id="tab-saved" class="tab-section">
+      <div class="page-header">
+        <h2>💾 Saved Jobs</h2>
+        <p>Your bookmarked job listings</p>
+      </div>
+      <div id="savedJobsList" class="jobs-grid">
+        <div class="empty-state">
+          <div class="empty-icon">🔖</div>
+          <h3>No saved jobs yet</h3>
+          <p>Click the bookmark icon on any job to save it here</p>
+          <button class="btn-primary" onclick="showTab('search')">Browse Jobs</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Job Detail Modal ────────────────────────────────── -->
+  <div id="jobModal" class="modal-overlay hidden">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- ── Toast Notification ─────────────────────────────── -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/detect.js"></script>
+</body>
+</html>
